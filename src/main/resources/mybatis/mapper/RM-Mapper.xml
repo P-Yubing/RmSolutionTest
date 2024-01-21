@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yb.rmsolution.mapper.RmSolutionMapper">
+
+<insert id="joinUser" parameterType="userVO">
+	insert into rmuser(
+						USER_ID, 
+						USER_PASS, 
+						USER_NAME, 
+						USER_BIRTH, 
+						USER_MAIL
+						)
+				values(
+						#{userId},
+						#{userPass},
+						#{userName},
+						#{userBirth},
+						#{userMail}
+						)
+</insert>
+
+<select id="login" parameterType="userVO" resultType="userVO">
+	select * 
+	from 
+		rmuser 
+	where 
+		USER_ID = #{userId} 
+	and 
+		USER_PASS = #{userPass}
+</select>
+
+<insert id="subscribe" parameterType="subscribeVO">
+	insert into SUBSCRIBE(
+							SUB_NO, 
+							USER_ID, 
+							SUB_CATE, 
+							SUB_PERS, 
+							SUB_COM,
+							SUB_SDATE,
+							SUB_PERIOD, 
+							SUB_REP, 
+							SUB_CALL, 
+							SUB_MAIL, 
+							SUB_ADDR
+						)
+					values(
+							seq_sub_no.nextval,
+							#{userId},
+							#{subCate},
+							#{subPers},
+							#{subCom},
+							SYSDATE,
+							#{subPeriod},
+							#{subRep},
+							#{subCall},
+							#{subMail},
+							#{subAddr}
+							)
+</insert>
+
+<update id="extendPeriod" parameterType="subscribeVO">
+	UPDATE 
+		SUBSCRIBE
+ 	SET 
+	 	SUB_PERIOD=#{subPeriod}
+	WHERE
+		USER_ID = #{userId}
+</update>
+
+<select id="dashboard" parameterType="subscribeVO" resultType="subscribeVO">
+	select 
+			sub.SUB_CATE,
+			sub.SUB_PERIOD,
+			ser.SER_STOR
+	from 
+		SUBSCRIBE sub, SERVICE ser
+	where 
+		sub.USER_ID = #{userId}
+	and
+		sub.SUB_CATE = ser.SUB_CATE
+</select>
+
+</mapper>
